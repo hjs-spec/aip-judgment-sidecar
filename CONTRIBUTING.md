@@ -1,1 +1,1 @@
-"We are deeply grateful for the patience and support from James and the AIP team. Meanwhile, we warmly welcome contributions from the community to help evolve the HJS Reference Implementation together."
+"We are deeply grateful for the patience and support from James and the AIP team. Meanwhile, we warmly welcome contributions from the community to help evolve the JEP Reference Implementation together."
