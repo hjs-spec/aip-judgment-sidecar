@@ -67,7 +67,7 @@ pip install -r requirements.txt
 
 ```
 
-### 2. Run the Industrial Demo
+### 2. Run  Demo
 
 ```bash
 python industrial_demo.py
