@@ -1,4 +1,4 @@
-# AIP Judgment Sidecar (HJS Reference Implementation)
+# AIP Judgment Sidecar (Reference Implementation)
 
 This repository provides  **non-intrusive** implementation of the **Heterogeneous Judgment Service (HJS)** for the  AIP ecosystem.
 
