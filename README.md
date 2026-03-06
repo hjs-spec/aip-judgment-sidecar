@@ -1,6 +1,6 @@
 # AIP Judgment Sidecar (Reference Implementation)
 
-This repository provides  **non-intrusive** implementation of the **Heterogeneous Judgment Service (JEP)** for the  AIP ecosystem.
+This repository provides a **non-intrusive** implementation of the **Judgment Event Protocol (JEP)** for the AIP ecosystem.
 
 It serves as a "Responsibility Anchor," allowing AIP to delegate complex policy judgments to a specialized sidecar without modifying its core identity or access control logic.
 
@@ -17,12 +17,12 @@ It serves as a "Responsibility Anchor," allowing AIP to delegate complex policy 
 
 ## 🏗️ Architecture
 
-In the AIP-HJS integrated flow, the Sidecar acts as a specialized **"Judicial Branch"**:
+In the AIP-JEP integrated flow, the Sidecar acts as a specialized **"Judicial Branch"**:
 
 1. **AIP Proxy** intercepts a sensitive tool call from an AI Agent.
-2. **AIP Proxy** forwards the Agent's **AAT** (Accountability Attachment Token) and the **Operation Context** to the HJS Sidecar.
+2. **AIP Proxy** forwards the Agent's **AAT** (Accountability Attachment Token) and the **Operation Context** to the JEP Sidecar.
 3. **JEP Sidecar** evaluates the request against the anchored policy and generates a judgment.
-4. **JEP Sidecar** issues a signed **HJS Receipt** (UUIDv7 based).
+4. **JEP Sidecar** issues a signed **JEP Receipt** (UUIDv7 based).
 5. **AIP Proxy** attaches the receipt to the final execution request for downstream auditing.
 
 ---
@@ -33,16 +33,16 @@ When running `industrial_demo.py`, the JEP Sidecar generates a cryptographically
 
 ```json
 {
-  "version": "hjs-v1",
-  "receipt_id": "hjs_018e154a-5678-7123-8123-abcdef123456",
+  "version": "jep-v1",
+  "receipt_id": "jep_018e154a-5678-7123-8123-abcdef123456",
   "aat_jti": "aat_urn:uuid:550e8400-e29b-41d4-a716-446655440000",
   "judgment": "approved",
   "issued_at": "2026-03-05T21:00:00Z",
-  "verifier": "hjs-sidecar-v1-stable",
+  "verifier": "jep-sidecar-v1-stable",
   "context_summary": {
     "op": "write",
     "res": "production/config.json",
-    "policy": "https://hjs-spec.org/policy/safety-v1.hjs"
+    "policy": "https://jep-spec.org/policy/safety-v1.jep"
   },
   "signature": "ed25519:6gH8...[truncated]...zP9q"
 }
@@ -59,7 +59,7 @@ When running `industrial_demo.py`, the JEP Sidecar generates a cryptographically
 
 ```bash
 # Clone the repository
-git clone https://github.com/hjs-spec/aip-judgment-sidecar.git
+git clone https://github.com/jep-spec/aip-judgment-sidecar.git
 cd aip-judgment-sidecar
 
 # Install dependencies
@@ -67,7 +67,7 @@ pip install -r requirements.txt
 
 ```
 
-### 2. Run  Demo
+### 2. Run Demo
 
 ```bash
 python industrial_demo.py
@@ -77,7 +77,7 @@ python industrial_demo.py
 ### 3. Basic Integration
 
 ```python
-from src.aip_hjs.verifier import AIPJudgmentVerifier
+from aip_jep.verifier import AIPJudgmentVerifier
 
 # Initialize the verifier
 verifier = AIPJudgmentVerifier()
@@ -87,11 +87,11 @@ context = {
     "operation": "write",
     "resource": "prod-db/settings",
     "risk_level": "high",
-    "policy_uri": "https://policy.hjs-spec.org/v1/security.hjs",
+    "policy_uri": "https://policy.jep-spec.org/v1/security.jep",
     "actor_id": "agent-88"
 }
 
-# Issue a cryptographically signed HJS receipt
+# Issue a cryptographically signed JEP receipt
 receipt = verifier.issue_judgment("aat_jti_550e8400", context)
 
 ```
@@ -102,7 +102,7 @@ receipt = verifier.issue_judgment("aat_jti_550e8400", context)
 
 This implementation is strictly aligned with the following standards:
 
-* **JEP Protocol**: [draft-wang-hjs-judgment-event-00](https://datatracker.ietf.org/doc/draft-wang-hjs-judgment-event/)
+* **JEP Protocol**: [draft-wang-jep-judgment-event-00](https://www.google.com/search?q=https://datatracker.ietf.org/doc/draft-wang-jep-judgment-event/)
 * **Identifier**: **RFC 9562** (UUIDv7)
 * **Security**: **RFC 8032** (Ed25519)
 * **Public Key Format**: **RFC 7517** (JWK)
@@ -111,10 +111,10 @@ This implementation is strictly aligned with the following standards:
 
 ## 📄 License
 
-This project is licensed under the **Apache License 2.0**. 
+This project is licensed under the **Apache License 2.0**.
 
 ---
 
-**Current Status**: 🟢 Functional Reference Implementation. 
+**Current Status**: 🟢 Functional Reference Implementation.
 
 ---
