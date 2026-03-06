@@ -115,6 +115,6 @@ This project is licensed under the **Apache License 2.0**. This license is chose
 
 ---
 
-**Current Status**: 🟢 Functional Reference Implementation. Ready for IETF Architect Review.
+**Current Status**: 🟢 Functional Reference Implementation. 
 
 ---
