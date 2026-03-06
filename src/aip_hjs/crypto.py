@@ -18,7 +18,7 @@ except ImportError:
 def generate_uuid7() -> str:
     """
     Generate a RFC 9562 compliant UUIDv7.
-    Provides time-ordered, collision-resistant identifiers for HJS audit trails.
+    Provides time-ordered, collision-resistant identifiers for JEP audit trails.
     """
     # 1. 48-bit Unix timestamp (milliseconds)
     ms = int(time.time() * 1000)
@@ -38,9 +38,9 @@ def generate_uuid7() -> str:
     # 4. Format: 8-4-4-4-12
     return f"{ms >> 16:08x}-{(ms & 0xFFFF):04x}-{part_a:04x}-{(part_b >> 48):04x}-{(part_b & 0xFFFFFFFFFFFF):012x}"
 
-class HJSAsymmetricSigner:
+class JEPAsymmetricSigner:
     """
-    Ed25519 Multi-channel Signer for HJS Receipts.
+    Ed25519 Multi-channel Signer for JEP Receipts.
     Allows third-party public verification without sharing secrets.
     """
     def __init__(self, private_key_hex: Optional[str] = None):
@@ -67,7 +67,7 @@ class HJSAsymmetricSigner:
             "kty": "OKP",
             "crv": "Ed25519",
             "x": base64.urlsafe_b64encode(pub_bytes).decode('ascii').rstrip('='),
-            "kid": f"hjs-key-{int(time.time())}",
+            "kid": f"jep-key-{int(time.time())}",
             "alg": "EdDSA",
             "use": "sig"
         }
