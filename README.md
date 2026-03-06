@@ -4,6 +4,8 @@ This repository provides an industrial-grade, **non-intrusive** implementation o
 
 It serves as a "Responsibility Anchor," allowing AIP to delegate complex policy judgments to a specialized sidecar without modifying its core identity or access control logic.
 
+---
+
 ## 🌟 Key Features
 
 * **Chronological Traceability**: Uses **UUIDv7 (RFC 9562)** for receipt IDs, enabling high-performance database indexing and time-ordered audit trails.
@@ -11,15 +13,45 @@ It serves as a "Responsibility Anchor," allowing AIP to delegate complex policy 
 * **Structured Context Binding**: Ensures every judgment is cryptographically tied to the specific operation context (resource, risk level, and policy hash).
 * **Zero-Intrusion Architecture**: Designed to run as a sidecar, integrating with AIP via standard JSON-based verification requests.
 
+---
+
 ## 🏗️ Architecture
 
-In the AIP-HJS integrated flow, the Sidecar acts as a specialized "Judicial Branch":
+In the AIP-HJS integrated flow, the Sidecar acts as a specialized **"Judicial Branch"**:
 
-1. **AIP Proxy** intercepts a sensitive tool call.
-2. **AIP Proxy** sends the Agent's AAT (Accountability Attachment Token) and the operation context to the **HJS Sidecar**.
-3. **HJS Sidecar** evaluates the request against the anchored policy.
+1. **AIP Proxy** intercepts a sensitive tool call from an AI Agent.
+2. **AIP Proxy** forwards the Agent's **AAT** (Accountability Attachment Token) and the **Operation Context** to the HJS Sidecar.
+3. **HJS Sidecar** evaluates the request against the anchored policy and generates a judgment.
 4. **HJS Sidecar** issues a signed **HJS Receipt** (UUIDv7 based).
-5. **AIP Proxy** attaches the receipt to the final execution request.
+5. **AIP Proxy** attaches the receipt to the final execution request for downstream auditing.
+
+---
+
+## 📊 Sample Output (HJS Receipt)
+
+When running `industrial_demo.py`, the HJS Sidecar generates a cryptographically bound receipt. The `receipt_id` encodes the precise time of judgment:
+
+```json
+{
+  "version": "hjs-v1",
+  "receipt_id": "hjs_018e154a-5678-7123-8123-abcdef123456",
+  "aat_jti": "aat_urn:uuid:550e8400-e29b-41d4-a716-446655440000",
+  "judgment": "approved",
+  "issued_at": "2026-03-05T21:00:00Z",
+  "verifier": "hjs-sidecar-v1-stable",
+  "context_summary": {
+    "op": "write",
+    "res": "production/config.json",
+    "policy": "https://hjs-spec.org/policy/safety-v1.hjs"
+  },
+  "signature": "ed25519:6gH8...[truncated]...zP9q"
+}
+
+```
+
+> **Note**: The `receipt_id` starts with `018e15...`, a characteristic of **UUIDv7** indicating the timestamp. This ensures all judgments are natively sortable by the time of issuance.
+
+---
 
 ## 🚀 Quick Start
 
@@ -37,22 +69,20 @@ pip install -r requirements.txt
 
 ### 2. Run the Industrial Demo
 
-The demo showcases the generation of a time-ordered receipt with Ed25519 signature:
-
 ```bash
 python industrial_demo.py
 
 ```
 
-### 3. Basic Usage
+### 3. Basic Integration
 
 ```python
 from src.aip_hjs.verifier import AIPJudgmentVerifier
 
-# Initialize the verifier (Sidecar mode)
+# Initialize the verifier
 verifier = AIPJudgmentVerifier()
 
-# Define the operation context
+# Define the operation context from AIP
 context = {
     "operation": "write",
     "resource": "prod-db/settings",
@@ -61,23 +91,30 @@ context = {
     "actor_id": "agent-88"
 }
 
-# Issue a cryptographically signed receipt
+# Issue a cryptographically signed HJS receipt
 receipt = verifier.issue_judgment("aat_jti_550e8400", context)
-print(f"Issued Receipt ID: {receipt['receipt_id']}")
 
 ```
 
+---
+
 ## 📜 Specification Compliance
 
-This implementation is aligned with the following standards:
+This implementation is strictly aligned with the following standards:
 
-* **HJS Protocol**: `draft-wang-hjs-judgment-event-00`
+* **HJS Protocol**: [draft-wang-hjs-judgment-event-00](https://datatracker.ietf.org/doc/draft-wang-hjs-judgment-event/)
 * **Identifier**: **RFC 9562** (UUIDv7)
 * **Security**: **RFC 8032** (Ed25519)
 * **Public Key Format**: **RFC 7517** (JWK)
 
+---
+
 ## 📄 License
 
-This project is licensed under the **Apache License 2.0** - see the [LICENSE](https://www.google.com/search?q=LICENSE) file for details. This license is chosen for its industry-wide compatibility and explicit patent grant.
+This project is licensed under the **Apache License 2.0**. This license is chosen for its industry-wide compatibility and explicit patent grant, ensuring safety for enterprise-level AIP deployments.
+
+---
+
+**Current Status**: 🟢 Functional Reference Implementation. Ready for IETF Architect Review.
 
 ---
