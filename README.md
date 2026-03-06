@@ -1,6 +1,6 @@
 # AIP Judgment Sidecar (Reference Implementation)
 
-This repository provides  **non-intrusive** implementation of the **Heterogeneous Judgment Service (HJS)** for the  AIP ecosystem.
+This repository provides  **non-intrusive** implementation of the **Heterogeneous Judgment Service (JEP)** for the  AIP ecosystem.
 
 It serves as a "Responsibility Anchor," allowing AIP to delegate complex policy judgments to a specialized sidecar without modifying its core identity or access control logic.
 
@@ -29,7 +29,7 @@ In the AIP-HJS integrated flow, the Sidecar acts as a specialized **"Judicial Br
 
 ## 📊 Sample Output (HJS Receipt)
 
-When running `industrial_demo.py`, the HJS Sidecar generates a cryptographically bound receipt. The `receipt_id` encodes the precise time of judgment:
+When running `industrial_demo.py`, the JEP Sidecar generates a cryptographically bound receipt. The `receipt_id` encodes the precise time of judgment:
 
 ```json
 {
@@ -102,7 +102,7 @@ receipt = verifier.issue_judgment("aat_jti_550e8400", context)
 
 This implementation is strictly aligned with the following standards:
 
-* **HJS Protocol**: [draft-wang-hjs-judgment-event-00](https://datatracker.ietf.org/doc/draft-wang-hjs-judgment-event/)
+* **JEP Protocol**: [draft-wang-hjs-judgment-event-00](https://datatracker.ietf.org/doc/draft-wang-hjs-judgment-event/)
 * **Identifier**: **RFC 9562** (UUIDv7)
 * **Security**: **RFC 8032** (Ed25519)
 * **Public Key Format**: **RFC 7517** (JWK)
