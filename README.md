@@ -21,13 +21,13 @@ In the AIP-HJS integrated flow, the Sidecar acts as a specialized **"Judicial Br
 
 1. **AIP Proxy** intercepts a sensitive tool call from an AI Agent.
 2. **AIP Proxy** forwards the Agent's **AAT** (Accountability Attachment Token) and the **Operation Context** to the HJS Sidecar.
-3. **HJS Sidecar** evaluates the request against the anchored policy and generates a judgment.
-4. **HJS Sidecar** issues a signed **HJS Receipt** (UUIDv7 based).
+3. **JEP Sidecar** evaluates the request against the anchored policy and generates a judgment.
+4. **JEP Sidecar** issues a signed **HJS Receipt** (UUIDv7 based).
 5. **AIP Proxy** attaches the receipt to the final execution request for downstream auditing.
 
 ---
 
-## 📊 Sample Output (HJS Receipt)
+## 📊 Sample Output (JEP Receipt)
 
 When running `industrial_demo.py`, the JEP Sidecar generates a cryptographically bound receipt. The `receipt_id` encodes the precise time of judgment:
 
