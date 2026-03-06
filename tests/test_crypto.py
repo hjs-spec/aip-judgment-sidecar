@@ -1,4 +1,4 @@
-from src.aip_hjs.crypto import generate_uuid7
+from src.aip_jep.crypto import generate_uuid7
 
 def test_uuid7_format():
     uid = generate_uuid7()
