@@ -1,6 +1,6 @@
 # AIP Judgment Sidecar (HJS Reference Implementation)
 
-This repository provides an industrial-grade, **non-intrusive** implementation of the **Heterogeneous Judgment Service (HJS)** for the **AI Proxy (AIP)** ecosystem.
+This repository provides  **non-intrusive** implementation of the **Heterogeneous Judgment Service (HJS)** for the **AI Proxy (AIP)** ecosystem.
 
 It serves as a "Responsibility Anchor," allowing AIP to delegate complex policy judgments to a specialized sidecar without modifying its core identity or access control logic.
 
