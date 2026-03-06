@@ -1,1 +1,1 @@
-"We welcome contributions to the HJS Reference Implementation. Please ensure all pull requests follow the RFC 9562 standards and include unit tests."
+"We are deeply grateful for the patience and support from James and the AIP team. Meanwhile, we warmly welcome contributions from the community to help evolve the HJS Reference Implementation together."
