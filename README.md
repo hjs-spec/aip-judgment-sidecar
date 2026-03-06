@@ -102,7 +102,7 @@ receipt = verifier.issue_judgment("aat_jti_550e8400", context)
 
 This implementation is strictly aligned with the following standards:
 
-* **JEP Protocol**: [draft-wang-jep-judgment-event-00](https://www.google.com/search?q=https://datatracker.ietf.org/doc/draft-wang-jep-judgment-event/)
+* **JEP Protocol**: [draft-wang-hjs-judgment-event-00](https://datatracker.ietf.org/doc/draft-wang-hjs-judgment-event/)
 * **Identifier**: **RFC 9562** (UUIDv7)
 * **Security**: **RFC 8032** (Ed25519)
 * **Public Key Format**: **RFC 7517** (JWK)
