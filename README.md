@@ -13,7 +13,7 @@ It serves as a "Responsibility Anchor," allowing AIP to delegate complex policy 
 
 ## 🏗️ Architecture
 
-In the HJS-AIP integrated flow, the Sidecar acts as a specialized "Judicial Branch":
+In the AIP-HJS integrated flow, the Sidecar acts as a specialized "Judicial Branch":
 
 1. **AIP Proxy** intercepts a sensitive tool call.
 2. **AIP Proxy** sends the Agent's AAT (Accountability Attachment Token) and the operation context to the **HJS Sidecar**.
