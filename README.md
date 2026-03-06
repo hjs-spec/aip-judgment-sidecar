@@ -111,7 +111,7 @@ This implementation is strictly aligned with the following standards:
 
 ## 📄 License
 
-This project is licensed under the **Apache License 2.0**. This license is chosen for its industry-wide compatibility and explicit patent grant, ensuring safety for enterprise-level AIP deployments.
+This project is licensed under the **Apache License 2.0**. 
 
 ---
 
