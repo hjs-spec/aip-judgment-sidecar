@@ -59,7 +59,7 @@ When running `industrial_demo.py`, the JEP Sidecar generates a cryptographically
 
 ```bash
 # Clone the repository
-git clone https://github.com/jep-spec/aip-judgment-sidecar.git
+git clone https://github.com/hjs-spec/aip-judgment-sidecar.git
 cd aip-judgment-sidecar
 
 # Install dependencies
@@ -87,7 +87,7 @@ context = {
     "operation": "write",
     "resource": "prod-db/settings",
     "risk_level": "high",
-    "policy_uri": "https://policy.jep-spec.org/v1/security.jep",
+    "policy_uri": "https://policy.hjs-spec.org/v1/security.jep",
     "actor_id": "agent-88"
 }
 
