@@ -1,120 +1,51 @@
-# AIP Judgment Sidecar (Reference Implementation)
+# AIP Judgment Sidecar 0.2
 
-This repository provides a **non-intrusive** implementation of the **Judgment Event Protocol (JEP)** for the AIP ecosystem.
+A versioned **AIP receipt prototype** with Ed25519 signatures and an explicit application policy hook. Its receipt envelope is not a JEP-Core-0.6 event. For current J/D/T/V wire events use [JEP API](https://github.com/hjs-spec/jep-api) and [the Python SDK](https://github.com/hjs-spec/sdk-py).
 
-It serves as a "Responsibility Anchor," allowing AIP to delegate complex policy judgments to a specialized sidecar without modifying its core identity or access control logic.
+## Install and run
 
----
+Requires Python 3.10 or newer. In a virtual environment:
 
-## 🌟 Key Features
-
-* **Chronological Traceability**: Uses **UUIDv7 (RFC 9562)** for receipt IDs, enabling high-performance database indexing and time-ordered audit trails.
-* **Cryptographic Accountability**: Implements **Ed25519 (EdDSA)** asymmetric signatures for multi-channel verification and non-repudiation.
-* **Structured Context Binding**: Ensures every judgment is cryptographically tied to the specific operation context (resource, risk level, and policy hash).
-* **Zero-Intrusion Architecture**: Designed to run as a sidecar, integrating with AIP via standard JSON-based verification requests.
-
----
-
-## 🏗️ Architecture
-
-In the AIP-JEP integrated flow, the Sidecar acts as a specialized **"Judicial Branch"**:
-
-1. **AIP Proxy** intercepts a sensitive tool call from an AI Agent.
-2. **AIP Proxy** forwards the Agent's **AAT** (Accountability Attachment Token) and the **Operation Context** to the JEP Sidecar.
-3. **JEP Sidecar** evaluates the request against the anchored policy and generates a judgment.
-4. **JEP Sidecar** issues a signed **JEP Receipt** (UUIDv7 based).
-5. **AIP Proxy** attaches the receipt to the final execution request for downstream auditing.
-
----
-
-## 📊 Sample Output (JEP Receipt)
-
-When running `industrial_demo.py`, the JEP Sidecar generates a cryptographically bound receipt. The `receipt_id` encodes the precise time of judgment:
-
-```json
-{
-  "version": "jep-v1",
-  "receipt_id": "jep_018e154a-5678-7123-8123-abcdef123456",
-  "aat_jti": "aat_urn:uuid:550e8400-e29b-41d4-a716-446655440000",
-  "judgment": "approved",
-  "issued_at": "2026-03-05T21:00:00Z",
-  "verifier": "jep-sidecar-v1-stable",
-  "context_summary": {
-    "op": "write",
-    "res": "production/config.json",
-    "policy": "https://jep-spec.org/policy/safety-v1.jep"
-  },
-  "signature": "ed25519:6gH8...[truncated]...zP9q"
-}
-
-```
-
-> **Note**: The `receipt_id` starts with `018e15...`, a characteristic of **UUIDv7** indicating the timestamp. This ensures all judgments are natively sortable by the time of issuance.
-
----
-
-## 🚀 Quick Start
-
-### 1. Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/jep-spec/aip-judgment-sidecar.git
+```sh
+git clone https://github.com/hjs-spec/aip-judgment-sidecar.git
 cd aip-judgment-sidecar
-
-# Install dependencies
-pip install -r requirements.txt
-
-```
-
-### 2. Run Demo
-
-```bash
+python -m pip install -r requirements.txt
 python industrial_demo.py
-
 ```
 
-### 3. Basic Integration
+The requirements install this local package, including its `src/aip_jep` imports. The demo does not call a real AIP service or policy engine. With no policy evaluator it produces a signed **undetermined** receipt. Missing or malformed AAT references/context are rejected before signing.
+
+## Explicit policy decisions
 
 ```python
-from aip_jep.verifier import AIPJudgmentVerifier
+from aip_jep import AIPJudgmentVerifier, PolicyDecision, verify_receipt
 
-# Initialize the verifier
-verifier = AIPJudgmentVerifier()
+def local_policy(aat_jti, context):
+    # Illustrative application policy; authenticate the actual AAT separately.
+    if context["operation"] == "read" and context["resource"].startswith("demo:"):
+        return PolicyDecision("approved", "Demo policy permits this read")
+    return PolicyDecision("denied", "Outside the demo policy")
 
-# Define the operation context from AIP
-context = {
-    "operation": "write",
-    "resource": "prod-db/settings",
-    "risk_level": "high",
-    "policy_uri": "https://policy.jep-spec.org/v1/security.jep",
-    "actor_id": "agent-88"
-}
-
-# Issue a cryptographically signed JEP receipt
-receipt = verifier.issue_judgment("aat_jti_550e8400", context)
-
+verifier = AIPJudgmentVerifier(policy_evaluator=local_policy)
+# receipt = verifier.issue_judgment(aat_jti, context)
+# verify_receipt(receipt, independently_trusted_public_jwk)
 ```
 
----
+The application supplies the policy evaluator and must bind it to the intended policy URI/hash. An exception or malformed decision aborts issuance. `policy_evaluated` means this callback ran, not that a credential, organization, or external truth was independently verified. `aat_jti` is a reference; this prototype does not authenticate AAT tokens.
 
-## 📜 Specification Compliance
+## Receipt and key boundaries
 
-This implementation is strictly aligned with the following standards:
+- New receipts use `version: aip-sidecar-receipt-0.2`, `canonicalization: sorted-ascii-json-v1`, an explicit verdict/reason, policy reference, context hash and signed key identifier.
+- A public-key fingerprint supplies a stable `kid`. Reloading the same private key preserves it; generating a different key changes it. A new process without a configured private key generates a new key; persist trusted key material when continuity is required.
+- The sorted ASCII JSON signature encoding is retained for compatibility with the earlier signer. It is explicitly **not RFC 8785 JCS or detached JWS**. New records are distinguishable from historical `jep-v1` receipts; existing signed records are never rewritten.
+- `verify_receipt` verifies the 0.2 envelope against a caller-trusted key, with key type/curve/algorithm/usage checks. It establishes signature integrity, not policy correctness, actor identity, legal responsibility or permission to execute.
+- Historical 0.1 receipts are not silently upgraded or accepted by the new receipt verifier. A historical reader must explicitly select their format.
 
-* **JEP Protocol**: [draft-wang-hjs-judgment-event-00](https://datatracker.ietf.org/doc/draft-wang-hjs-judgment-event/)
-* **Identifier**: **RFC 9562** (UUIDv7)
-* **Security**: **RFC 8032** (Ed25519)
-* **Public Key Format**: **RFC 7517** (JWK)
+## Tests
 
----
+```sh
+python -m pip install -e '.[test]'
+python -m pytest -q
+```
 
-## 📄 License
-
-This project is licensed under the **Apache License 2.0**.
-
----
-
-**Current Status**: 🟢 Functional Reference Implementation.
-
----
+Tests cover missing input, policy failures, explicit outcomes, tampering, stable key identifiers, key metadata and legacy payload encoding. CI installs the package and exercises the documented demo and built wheel.
