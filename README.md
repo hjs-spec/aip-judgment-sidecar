@@ -1,6 +1,6 @@
 # AIP Judgment Sidecar 0.2
 
-A versioned **AIP receipt prototype** with Ed25519 signatures and an explicit application policy hook. Its receipt envelope is not a JEP-Core-0.6 event. For current J/D/T/V wire events use [JEP API](https://github.com/hjs-spec/jep-api) and [the Python SDK](https://github.com/hjs-spec/sdk-py).
+A versioned **AIP receipt prototype** with Ed25519 signatures and an explicit application policy hook. Its receipt envelope is independent of JEP Core, including current Core 0.7. For current J/D/T/V wire events use [JEP API](https://github.com/hjs-spec/jep-api) and [the Python SDK](https://github.com/hjs-spec/sdk-py).
 
 ## Install and run
 
