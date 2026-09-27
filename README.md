@@ -2,6 +2,11 @@
 
 A versioned **AIP receipt prototype** with Ed25519 signatures and an explicit application policy hook. Its receipt envelope is independent of JEP Core, including current Core 0.7. For current J/D/T/V wire events use [JEP API](https://github.com/hjs-spec/jep-api) and [the Python SDK](https://github.com/hjs-spec/sdk-py).
 
+This is an independent experiment, outside the JEP/TSTO implementation and release
+path. It has no TSTO object/binding validation or automatic conversion to JEP
+events. Shared terminology and organization membership do not imply interoperability.
+The [protocol integration directory](https://github.com/hjs-spec/.github/blob/main/PROJECTS.md#integrate) lists supported paths.
+
 ## Install and run
 
 Requires Python 3.10 or newer. In a virtual environment:
